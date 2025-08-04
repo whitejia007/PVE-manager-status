@@ -519,13 +519,12 @@ if ! grep -q 'modbyshowtempfreq' $plibjs ;then
 	[ ! -e $plibjs.$pvever.bak ] && cp $plibjs $plibjs.$pvever.bak
 	
 	if [ "$(sed -n '/\/nodes\/localhost\/subscription/{=;p;q}' $plibjs)" ];then 
-		sed -i '/\/nodes\/localhost\/subscription/,+10{
-			/res === null/{
-				N
-				s/(.*)/(false)/
-				a //modbyshowtempfreq
-			}
-		}' $plibjs
+		sed -i '/\/nodes\/localhost\/subscription/,+15{
+	                s/res === null/false/g
+	                s/res === undefined/false/g
+	                s/!res/false/g
+	                s/res\.data\.status\.toLowerCase() !== '\''active'\''/false \/\/modbyshowtempfreq/g
+                }' $plibjs
 		
 		$dmode && sed -n "/\/nodes\/localhost\/subscription/,+10p" $plibjs
 	else 
